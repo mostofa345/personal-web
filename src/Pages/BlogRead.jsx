@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 
+/* eslint-disable no-unused-vars */
+
 // Inline SVG Icons for consistent styling
 const HeartIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-red-500"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
@@ -13,8 +15,8 @@ const ThumbsUpIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 text-[#7cf03d]"><path d="M7 10v12h11.2a2.3 2.3 0 0 0 2.3-2.3v-2.1a2 2 0 0 0-2-2h-3.8V10h6V8a2 2 0 0 0-2-2h-12c-1.1 0-2 .9-2 2v2h4zM4 10h2V8H4V6c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v2H4zM18 4H6"/></svg>
 );
 
-// API URL (Make sure this matches your backend server address)
-const API_URL = 'VITE_API_URL=https://personal-server-uf48.onrender.com/api';
+// FIX: Corrected API URL to remove the 'VITE_API_URL=' prefix.
+const API_BASE_URL = 'https://personal-server-uf48.onrender.com/api';
 
 const BlogRead = () => {
     const { id } = useParams(); 
@@ -28,12 +30,23 @@ const BlogRead = () => {
     const [error, setError] = useState(null);
     const [commentStatus, setCommentStatus] = useState(null); // Feedback for comment submission
 
+    // Function to format the date to show 'Month Day, Year'
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
     // Function to fetch comments for the current blog ID
     const fetchComments = async () => {
         if (!id) return;
         try {
             // API Endpoint: /api/blogs/:id/comments
-            const response = await fetch(`${API_URL}/blogs/${id}/comments`);
+            const response = await fetch(`${API_BASE_URL}/blogs/${id}/comments`);
             if (!response.ok) {
                 // If comments fail to load, log it but don't stop the main page
                 console.warn(`Could not retrieve existing comments for blog ID ${id}.`);
@@ -56,8 +69,8 @@ const BlogRead = () => {
             }
 
             try {
-                // 1. Fetch Blog Post
-                const blogResponse = await fetch(`${API_URL}/blogs/${id}`); 
+                // 1. Fetch Blog Post (using corrected API_BASE_URL)
+                const blogResponse = await fetch(`${API_BASE_URL}/blogs/${id}`); 
                 
                 if (!blogResponse.ok) {
                     const errorText = await blogResponse.text();
@@ -98,7 +111,7 @@ const BlogRead = () => {
             // API Endpoint: /api/blogs/:id/comments
             const commentPayload = { name, comment };
             
-            const response = await fetch(`${API_URL}/blogs/${id}/comments`, {
+            const response = await fetch(`${API_BASE_URL}/blogs/${id}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +130,7 @@ const BlogRead = () => {
                 }
                 
                 // Log the error with the endpoint path
-                console.error(`Error submitting comment to ${API_URL}/blogs/${id}/comments:`, response.status, errorMessage);
+                console.error(`Error submitting comment to ${API_BASE_URL}/blogs/${id}/comments:`, response.status, errorMessage);
                 throw new Error(errorMessage);
             }
 
@@ -154,7 +167,7 @@ const BlogRead = () => {
     }
 
     // Prepare content for rendering (keeping original blog language in content)
-    const formattedDate = new Date(blogPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const formattedDate = formatDate(blogPost.date);
     const fullContentHTML = `
         <h1 class="text-4xl md:text-5xl font-bold mb-6 text-[#7cf03d] font-poppins">${blogPost.title}</h1>
         <p class="text-gray-400 text-lg mb-4 font-raleway">By ${blogPost.author || 'Unknown'} | Date: ${formattedDate} | Category: ${blogPost.category || 'General'}</p>
@@ -273,7 +286,7 @@ const BlogRead = () => {
                                     <div className="flex justify-between items-start mb-2">
                                         <span className="text-white font-semibold text-lg">{rev.name}</span>
                                         <span className="text-gray-400 text-xs mt-1">
-                                            {new Date(rev.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                            {formatDate(rev.date)}
                                         </span>
                                     </div>
                                     <p className="text-gray-300 leading-relaxed italic">{rev.comment}</p>
