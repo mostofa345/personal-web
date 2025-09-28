@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 
-// Client-side API URL
-const API_URL = "VITE_API_URL=https://personal-server-uf48.onrender.com/api";
+// Client-side API URL: VITE-এর মাধ্যমে পরিবেশের ভ্যারিয়েবল লোড করার সঠিক পদ্ধতি
+// এটি .env ফাইল থেকে VITE_API_URL এর মান নেবে।
+const API_URL = import.meta.env.VITE_API_URL; 
+// যদি ডেভলপমেন্টের জন্য লোকাল হোস্ট দরকার হয়, তবে এভাবে ব্যবহার করতে পারো:
+// const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,10 +16,18 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // API_URL যদি সেট করা না থাকে, তবে Fetch করা যাবে না।
+    if (!API_URL) {
+      setError('API URL set kora hoyni. Kripa kore .env ba Render settings e VITE_API_URL set korun.');
+      setLoading(false);
+      return;
+    }
+
     const fetchNavItems = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/webnav`);
+        // এখন URL টি হবে: https://personal-server-uf48.onrender.com/api/webnav
+        const response = await fetch(`${API_URL}/webnav`); 
         if (!response.ok) {
           throw new Error('Failed to fetch navigation items');
         }
@@ -25,7 +36,8 @@ const Navbar = () => {
         setNavItems(data);
         setError(null);
       } catch (err) {
-        setError('Navigation items anay somossa hoyeche.');
+        // Erroneous URL error (404) will be caught here
+        setError('Navigation items anay somossa hoyeche. API URL check korun.');
         console.error("Error fetching nav items:", err);
       } finally {
         setLoading(false);

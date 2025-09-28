@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = "VITE_API_URL=https://personal-server-uf48.onrender.com/api";
+// VITE-এর মাধ্যমে পরিবেশের ভ্যারিয়েবল লোড করার সঠিক পদ্ধতি
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProjectNav = ({ active, onChange }) => {
   const [navTags, setNavTags] = useState([]);
@@ -9,9 +10,17 @@ const ProjectNav = ({ active, onChange }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // API_URL যদি সেট করা না থাকে, তবে Fetch করা যাবে না।
+    if (!API_URL) {
+      setError('API URL set kora hoyni.');
+      setLoading(false);
+      return;
+    }
+    
     const fetchTags = async () => {
       try {
-        const response = await fetch(`${API_URL}/projectnav`);
+        // এখন URL টি হবে: https://personal-server-uf48.onrender.com/api/projectnav
+        const response = await fetch(`${API_URL}/projectnav`); 
         if (!response.ok) {
           throw new Error('Failed to fetch project tags.');
         }
@@ -21,7 +30,7 @@ const ProjectNav = ({ active, onChange }) => {
         setError(null);
       } catch (err) {
         console.error("Error fetching project tags:", err);
-        setError("Project tags load kora jayni.");
+        setError("Project tags load kora jayni. API URL check korun.");
       } finally {
         setLoading(false);
       }
