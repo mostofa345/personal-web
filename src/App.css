@@ -1,0 +1,8 @@
+body{  font-family: "Montserrat", sans-serif; background: #f1f1f1 !important;}
+.MuiBadge-badge{background: #ff5252 !important;}
+.ReactCollapse--collapse {
+  transition: height 300ms;
+}
+
+.btn_blue{background: #3832fa !important; color: #fff !important; padding: 8px 20px !important;}
+.btn_blue:hover{background: #3067c5 !important;}
