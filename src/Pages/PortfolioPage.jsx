@@ -1,4 +1,4 @@
-import PortfolioHome from "../components/PortfolioHome";
+import PortfolioHome from "../Components/PortfolioHome"; // 'Components' এর 'C";
 import React from "react";
 
 const PortfolioPage = () => {
