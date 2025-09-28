@@ -1,6 +1,6 @@
 import "./Home.css";
 import Newsletter from "../Components/layout/Newsletter";
-import ProjectsSection from "../components/Projects/ProjectsSection";
+import ProjectsSection from "../Components/Projects/ProjectsSection";
 import React, { useEffect, useState } from "react";
 import profileImg from "../assets/profile.png";
 import { motion } from "framer-motion";
