@@ -3,10 +3,10 @@ import BlogPage from "../Pages/BlogPage";
 import BlogRead from "../Pages/BlogRead";
 import Contact from "../Pages/Contact";
 import FAQ from "../Pages/FAQ";
-import Footer from "../components/layout/Footer";
+import Footer from "../Components/layout/Footer"; // Components (বড় 'C";
 import GetQuote from "../Pages/GetQuote";
 import Home from "../Pages/Home";
-import Navbar from "../components/layout/Navbar";
+import Navbar from "../Components/layout/Navbar"; // Components (বড় 'C";
 import Payment from "../Pages/Payment";
 import PortfolioPage from "../Pages/PortfolioPage";
 import PrivacyPolicy from "../Pages/PrivacyPolicy";
@@ -16,6 +16,8 @@ import Service from "../Pages/Service";
 import ServiceDetails from "../Pages/ServiceDetails";
 import TermsOfService from "../Pages/TermsOfService";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+// এই দুটি লাইন পরিবর্তন করো:
 
 // Import your page components
 
